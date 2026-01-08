@@ -1,0 +1,117 @@
+# Automated VAR System Configuration
+# Version: 0.2.0
+
+# =============================================================================
+# ROBOFLOW INTEGRATION
+# =============================================================================
+roboflow:
+  api_key: "QEZ7CzEaDFxxXMCWMdLn"
+  model_id: "my-first-project-mbces/1"
+  workspace: "var-project"
+  project: "soccer-player-detection"
+  api_url: "https://detect.roboflow.com"
+  
+  # Training configuration
+  training:
+    epochs: 100
+    batch_size: 16
+    image_size: 640
+    patience: 10
+    
+  # Augmentation settings
+  augmentation:
+    flip_horizontal: true
+    flip_vertical: false
+    rotation: 15
+    brightness: 0.2
+    blur: 1.5
+    noise: 1.5
+    
+  # Preprocessing
+  preprocessing:
+    resize: 640
+    auto_orient: true
+    grayscale: false
+
+# =============================================================================
+# DETECTION SETTINGS
+# =============================================================================
+detection:
+  model: "yolov8x.pt"
+  confidence_threshold: 0.5
+  iou_threshold: 0.45
+  classes:
+    - player
+    - ball
+    - referee
+    - goalkeeper
+
+# =============================================================================
+# TRACKING SETTINGS
+# =============================================================================
+tracking:
+  max_age: 30
+  min_hits: 3
+  iou_threshold: 0.3
+  track_thresh: 0.5
+  match_thresh: 0.8
+
+# =============================================================================
+# TEAM CLASSIFICATION
+# =============================================================================
+team_classification:
+  method: "clustering"  # clustering or predefined
+  n_teams: 2
+  temporal_smoothing: true
+  smoothing_window: 10
+  color_space: "hsv"
+
+# =============================================================================
+# PITCH / HOMOGRAPHY
+# =============================================================================
+pitch:
+  length: 105.0  # meters
+  width: 68.0    # meters
+  penalty_area_length: 16.5
+  penalty_area_width: 40.3
+  goal_area_length: 5.5
+  goal_area_width: 18.3
+  center_circle_radius: 9.15
+  penalty_spot_distance: 11.0
+
+homography:
+  template_scale: 10.0  # pixels per meter
+  canny_low: 50
+  canny_high: 150
+  hough_threshold: 100
+  min_line_length: 50
+  max_line_gap: 10
+
+# =============================================================================
+# VAR DETECTION
+# =============================================================================
+offside:
+  tolerance_cm: 15.0
+  
+foul:
+  contact_threshold: 1.5  # meters
+  fall_threshold: 0.3
+  min_contact_frames: 2
+  penalty_area_only: false
+
+# =============================================================================
+# OUTPUT SETTINGS
+# =============================================================================
+output:
+  save_video: true
+  save_pitch_view: true
+  video_codec: "mp4v"
+  json_indent: 2
+
+# =============================================================================
+# PROCESSING
+# =============================================================================
+processing:
+  device: "auto"  # auto, cuda, mps, cpu
+  batch_size: 1
+  max_frames: null  # null for all frames

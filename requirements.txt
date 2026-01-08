@@ -1,0 +1,102 @@
+# Automated VAR System - Requirements
+# Version: 0.2.0
+
+# ============================================
+# CORE DEPENDENCIES
+# ============================================
+
+# Deep Learning
+torch>=2.0.0
+torchvision>=0.15.0
+ultralytics>=8.0.0
+
+# Computer Vision
+opencv-python>=4.8.0
+opencv-python-headless>=4.8.0
+
+# Scientific Computing
+numpy>=1.24.0
+scipy>=1.10.0
+scikit-learn>=1.2.0
+
+# ============================================
+# ROBOFLOW INTEGRATION
+# ============================================
+
+# Roboflow SDK (for training data management)
+roboflow>=1.1.0
+
+# Inference SDK (for cloud-based detection)
+inference-sdk>=0.9.0
+
+# ============================================
+# TRACKING & DETECTION
+# ============================================
+
+# ByteTrack dependencies
+lap>=0.4.0
+cython-bbox>=0.1.3
+
+# ============================================
+# WEB INTERFACE
+# ============================================
+
+# Streamlit dashboard
+streamlit>=1.28.0
+
+# ============================================
+# UTILITIES
+# ============================================
+
+# Logging
+loguru>=0.7.0
+
+# Configuration
+pyyaml>=6.0
+python-dotenv>=1.0.0
+
+# Progress bars
+tqdm>=4.65.0
+
+# Data handling
+pandas>=2.0.0
+pillow>=9.5.0
+
+# ============================================
+# OPTIONAL - VIDEO PROCESSING
+# ============================================
+
+# FFmpeg wrapper (optional)
+# ffmpeg-python>=0.2.0
+
+# ============================================
+# DEVELOPMENT
+# ============================================
+
+# Testing
+pytest>=7.3.0
+pytest-cov>=4.0.0
+
+# Code quality
+black>=23.3.0
+flake8>=6.0.0
+isort>=5.12.0
+
+# Type checking
+mypy>=1.3.0
+
+# ============================================
+# INSTALLATION NOTES
+# ============================================
+
+# For GPU support (NVIDIA):
+# pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+
+# For Apple Silicon (M1/M2/M3):
+# pip install torch torchvision (MPS support is built-in)
+
+# For Roboflow training:
+# pip install roboflow
+
+# For cloud inference:
+# pip install inference-sdk

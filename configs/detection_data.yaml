@@ -1,0 +1,40 @@
+# YOLOv8 Training Data Configuration
+# For training custom soccer detection model
+
+# Dataset paths (relative to project root)
+path: ./data/annotated/detection
+train: images/train
+val: images/val
+test: images/test
+
+# Number of classes
+nc: 4
+
+# Class names
+names:
+  0: player
+  1: ball
+  2: referee
+  3: goalkeeper
+
+# Roboflow dataset integration
+# To download dataset from Roboflow:
+# python -c "from roboflow import Roboflow; rf = Roboflow(api_key='QEZ7CzEaDFxxXMCWMdLn'); project = rf.workspace('var-project').project('soccer-player-detection'); dataset = project.version(1).download('yolov8')"
+
+# Training command:
+# yolo detect train data=configs/detection_data.yaml model=yolov8x.pt epochs=100 imgsz=640
+
+# Augmentation (applied during training)
+augmentation:
+  hsv_h: 0.015
+  hsv_s: 0.7
+  hsv_v: 0.4
+  degrees: 0.0
+  translate: 0.1
+  scale: 0.5
+  shear: 0.0
+  perspective: 0.0
+  flipud: 0.0
+  fliplr: 0.5
+  mosaic: 1.0
+  mixup: 0.0
