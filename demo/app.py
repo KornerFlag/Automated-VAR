@@ -172,6 +172,93 @@ st.markdown("""
     0%, 100% { box-shadow: 0 0 5px rgba(99, 102, 241, 0.4); }
     50% { box-shadow: 0 0 25px rgba(99, 102, 241, 0.8); }
 }
+
+@keyframes nodeGlow {
+    0%, 100% { opacity: 0.25; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes nodeDrift1 {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(15px, -10px); }
+    50% { transform: translate(25px, 5px); }
+    75% { transform: translate(10px, 15px); }
+}
+
+@keyframes nodeDrift2 {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(-10px, 15px); }
+    50% { transform: translate(5px, 25px); }
+    75% { transform: translate(20px, 10px); }
+}
+
+@keyframes nodeDrift3 {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(20px, 10px); }
+    50% { transform: translate(-5px, 20px); }
+    75% { transform: translate(-15px, -5px); }
+}
+
+@keyframes nodeDrift4 {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(-15px, -15px); }
+    50% { transform: translate(10px, -20px); }
+    75% { transform: translate(25px, 5px); }
+}
+
+.pass-network-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.pn-node {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    opacity: 0.35;
+    box-shadow: 0 0 15px currentColor;
+    animation: nodeGlow 4s ease-in-out infinite;
+}
+
+.pn-node.pn-delay {
+    animation-delay: 2s;
+}
+
+.pn-line {
+    position: absolute;
+    height: 2px;
+    opacity: 0;
+    animation: lineFlow 8s ease-in-out infinite;
+}
+
+.pn-line.pn-line-rev {
+    animation: lineFlowRev 10s ease-in-out infinite;
+}
+
+.pn-line.pn-line-slow {
+    animation: lineFlow 12s ease-in-out infinite;
+}
+
+@keyframes lineFlow {
+    0%, 100% { opacity: 0; transform-origin: left center; }
+    15% { opacity: 1; }
+    50% { opacity: 1; }
+    85% { opacity: 0; }
+}
+
+@keyframes lineFlowRev {
+    0%, 100% { opacity: 0; transform-origin: right center; }
+    20% { opacity: 1; }
+    55% { opacity: 1; }
+    90% { opacity: 0; }
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -197,6 +284,54 @@ st.markdown(f"""
 # ============================================================================
 # HELPERS
 # ============================================================================
+def pass_network_background():
+    """Render animated pass diagram/network connections in background using CSS"""
+    st.markdown("""<div class="pass-network-bg">
+<div class="pn-node" style="left:5%; top:50%; background:#6366f1; width:14px; height:14px;"></div>
+<div class="pn-node pn-delay" style="left:12%; top:25%; background:#6366f1;"></div>
+<div class="pn-node" style="left:12%; top:50%; background:#6366f1;"></div>
+<div class="pn-node pn-delay" style="left:12%; top:75%; background:#6366f1;"></div>
+<div class="pn-node" style="left:22%; top:35%; background:#8b5cf6;"></div>
+<div class="pn-node pn-delay" style="left:22%; top:65%; background:#8b5cf6;"></div>
+<div class="pn-node pn-delay" style="left:32%; top:28%; background:#8b5cf6;"></div>
+<div class="pn-node" style="left:32%; top:50%; background:#8b5cf6;"></div>
+<div class="pn-node pn-delay" style="left:32%; top:72%; background:#8b5cf6;"></div>
+<div class="pn-node pn-delay" style="right:5%; top:50%; background:#4ade80; width:14px; height:14px;"></div>
+<div class="pn-node" style="right:12%; top:25%; background:#4ade80;"></div>
+<div class="pn-node pn-delay" style="right:12%; top:50%; background:#4ade80;"></div>
+<div class="pn-node" style="right:12%; top:75%; background:#4ade80;"></div>
+<div class="pn-node pn-delay" style="right:22%; top:35%; background:#4ade80;"></div>
+<div class="pn-node" style="right:22%; top:65%; background:#4ade80;"></div>
+<div class="pn-node" style="right:32%; top:28%; background:#4ade80;"></div>
+<div class="pn-node pn-delay" style="right:32%; top:50%; background:#4ade80;"></div>
+<div class="pn-node" style="right:32%; top:72%; background:#4ade80;"></div>
+<div class="pn-line" style="left:5%; top:50%; width:8%; transform:rotate(-25deg); background:linear-gradient(90deg, transparent, rgba(99,102,241,0.3), transparent);"></div>
+<div class="pn-line pn-line-rev" style="left:5%; top:50%; width:8%; transform:rotate(0deg); background:linear-gradient(90deg, transparent, rgba(99,102,241,0.3), transparent);"></div>
+<div class="pn-line pn-line-slow" style="left:5%; top:52%; width:8%; transform:rotate(25deg); background:linear-gradient(90deg, transparent, rgba(99,102,241,0.3), transparent);"></div>
+<div class="pn-line" style="left:12%; top:27%; width:12%; transform:rotate(8deg); background:linear-gradient(90deg, transparent, rgba(139,92,246,0.25), transparent);"></div>
+<div class="pn-line pn-line-rev" style="left:12%; top:48%; width:12%; transform:rotate(-12deg); background:linear-gradient(90deg, transparent, rgba(139,92,246,0.25), transparent);"></div>
+<div class="pn-line" style="left:12%; top:52%; width:12%; transform:rotate(12deg); background:linear-gradient(90deg, transparent, rgba(139,92,246,0.25), transparent);"></div>
+<div class="pn-line pn-line-slow" style="left:12%; top:73%; width:12%; transform:rotate(-8deg); background:linear-gradient(90deg, transparent, rgba(139,92,246,0.25), transparent);"></div>
+<div class="pn-line pn-line-rev" style="left:22%; top:36%; width:12%; transform:rotate(-6deg); background:linear-gradient(90deg, transparent, rgba(99,102,241,0.25), transparent);"></div>
+<div class="pn-line" style="left:22%; top:38%; width:12%; transform:rotate(12deg); background:linear-gradient(90deg, transparent, rgba(99,102,241,0.25), transparent);"></div>
+<div class="pn-line pn-line-slow" style="left:22%; top:62%; width:12%; transform:rotate(-10deg); background:linear-gradient(90deg, transparent, rgba(99,102,241,0.25), transparent);"></div>
+<div class="pn-line pn-line-rev" style="left:22%; top:66%; width:12%; transform:rotate(6deg); background:linear-gradient(90deg, transparent, rgba(99,102,241,0.25), transparent);"></div>
+<div class="pn-line pn-line-rev" style="right:5%; top:50%; width:8%; transform:rotate(25deg); background:linear-gradient(90deg, transparent, rgba(74,222,128,0.25), transparent);"></div>
+<div class="pn-line" style="right:5%; top:50%; width:8%; transform:rotate(0deg); background:linear-gradient(90deg, transparent, rgba(74,222,128,0.25), transparent);"></div>
+<div class="pn-line pn-line-slow" style="right:5%; top:52%; width:8%; transform:rotate(-25deg); background:linear-gradient(90deg, transparent, rgba(74,222,128,0.25), transparent);"></div>
+<div class="pn-line pn-line-rev" style="right:12%; top:27%; width:12%; transform:rotate(-8deg); background:linear-gradient(90deg, transparent, rgba(74,222,128,0.2), transparent);"></div>
+<div class="pn-line" style="right:12%; top:48%; width:12%; transform:rotate(12deg); background:linear-gradient(90deg, transparent, rgba(74,222,128,0.2), transparent);"></div>
+<div class="pn-line pn-line-rev" style="right:12%; top:52%; width:12%; transform:rotate(-12deg); background:linear-gradient(90deg, transparent, rgba(74,222,128,0.2), transparent);"></div>
+<div class="pn-line" style="right:12%; top:73%; width:12%; transform:rotate(8deg); background:linear-gradient(90deg, transparent, rgba(74,222,128,0.2), transparent);"></div>
+<div class="pn-line" style="right:22%; top:36%; width:12%; transform:rotate(6deg); background:linear-gradient(90deg, transparent, rgba(74,222,128,0.2), transparent);"></div>
+<div class="pn-line pn-line-rev" style="right:22%; top:38%; width:12%; transform:rotate(-12deg); background:linear-gradient(90deg, transparent, rgba(74,222,128,0.2), transparent);"></div>
+<div class="pn-line" style="right:22%; top:62%; width:12%; transform:rotate(10deg); background:linear-gradient(90deg, transparent, rgba(74,222,128,0.2), transparent);"></div>
+<div class="pn-line pn-line-slow" style="right:22%; top:66%; width:12%; transform:rotate(-6deg); background:linear-gradient(90deg, transparent, rgba(74,222,128,0.2), transparent);"></div>
+<div class="pn-line pn-line-slow" style="left:32%; top:49%; width:36%; transform:rotate(-2deg); background:linear-gradient(90deg, transparent, rgba(139,92,246,0.15), transparent);"></div>
+<div class="pn-line" style="left:32%; top:29%; width:36%; transform:rotate(0deg); background:linear-gradient(90deg, transparent, rgba(99,102,241,0.12), transparent);"></div>
+<div class="pn-line pn-line-rev" style="left:32%; top:71%; width:36%; transform:rotate(0deg); background:linear-gradient(90deg, transparent, rgba(99,102,241,0.12), transparent);"></div>
+</div>""", unsafe_allow_html=True)
+
 def spacer(rem=2):
     st.markdown(f"<div style='height:{rem}rem'></div>", unsafe_allow_html=True)
 
@@ -229,12 +364,12 @@ def hero_title_animated(text):
 def badge_animated(text):
     st.markdown(f"""
     <div style='text-align:center; margin-bottom:2.5rem;'>
-        <span style='display:inline-flex; align-items:center; gap:12px; background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.2); border-radius:50px; padding:12px 26px; font-size:0.95rem; color:#a1a1aa;'>
+        <span style='display:inline-flex; align-items:center; gap:14px; background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.2); border-radius:50px; padding:16px 32px; font-size:1.1rem; color:#a1a1aa;'>
             <span style='
-                width:10px; 
-                height:10px; 
-                background:#6366f1; 
-                border-radius:50%; 
+                width:12px;
+                height:12px;
+                background:#6366f1;
+                border-radius:50%;
                 -webkit-animation: pulse 2s ease-in-out infinite;
                 animation: pulse 2s ease-in-out infinite;
             '></span>
@@ -311,27 +446,126 @@ def module_item_animated(name, delay_ms=0):
     </div>
     """, unsafe_allow_html=True)
 
-def timeline_item(inc_type, timestamp, desc, conf):
+def timeline_item(inc_type, timestamp, desc, conf, declaration=None):
     colors = {"offside": "#fbbf24", "foul": "#f87171", "penalty": "#f87171"}
     color = colors.get(inc_type, "#818cf8")
     m, s = divmod(int(timestamp), 60)
+
+    # Get confidence level color and label
+    if conf >= 0.90:
+        conf_color, conf_label = "#22c55e", "Very High"
+    elif conf >= 0.75:
+        conf_color, conf_label = "#84cc16", "High"
+    elif conf >= 0.60:
+        conf_color, conf_label = "#eab308", "Medium"
+    elif conf >= 0.45:
+        conf_color, conf_label = "#f97316", "Low"
+    else:
+        conf_color, conf_label = "#ef4444", "Very Low"
+
+    # Main timeline entry
     st.markdown(f"""
     <div style='position:relative; padding:16px 0 16px 28px; border-left:2px solid rgba(255,255,255,0.08); margin-left:8px;'>
-        <div style='
-            position:absolute; 
-            left:-6px; 
-            top:20px; 
-            width:10px; 
-            height:10px; 
-            border-radius:50%; 
-            background:{color}; 
-            box-shadow:0 0 10px {color}80;
-            -webkit-animation: pulse 2s ease-in-out infinite;
-            animation: pulse 2s ease-in-out infinite;
-        '></div>
+        <div style='position:absolute; left:-6px; top:20px; width:10px; height:10px; border-radius:50%; background:{color}; box-shadow:0 0 10px {color}80;'></div>
         <span style='font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:{color};'>{inc_type.upper()}</span>
         <span style='font-size:0.8rem; color:#52525b; margin-left:12px; font-family:monospace;'>{m:02d}:{s:02d}</span>
-        <p style='font-size:0.9rem; color:#a1a1aa; margin:6px 0 0 0;'>{desc} — {conf:.0%} confidence</p>
+        <div style='display:flex; align-items:center; gap:8px; margin-top:4px;'>
+            <div style='flex:1; height:4px; background:rgba(255,255,255,0.1); border-radius:2px;'>
+                <div style='width:{conf*100}%; height:100%; background:{conf_color}; border-radius:2px;'></div>
+            </div>
+            <span style='font-size:0.7rem; color:{conf_color};'>{conf:.0%}</span>
+        </div>
+        <p style='font-size:0.9rem; color:#a1a1aa; margin:6px 0 0 0;'>{desc}</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Declaration section (separate markdown call to avoid rendering issues)
+    if declaration:
+        review_text = "REVIEW REQUIRED" if declaration.get('review_required', False) else ""
+        review_style = "background:#dc2626; color:white; padding:2px 8px; border-radius:10px; font-size:0.65rem;" if review_text else "display:none;"
+
+        st.markdown(f"""
+        <div style='margin-left:36px; margin-top:-10px; margin-bottom:16px;'>
+            <div style='background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.2); border-radius:8px; padding:12px;'>
+                <div style='display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;'>
+                    <span style='font-size:0.7rem; color:#818cf8; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;'>VAR DECLARATION</span>
+                    <span style='{review_style}'>{review_text}</span>
+                </div>
+                <div style='font-size:0.85rem; color:#fafafa; font-weight:600; margin-bottom:6px;'>{declaration.get('decision', '')}</div>
+                <div style='font-size:0.75rem; color:{conf_color}; margin-bottom:8px;'>Confidence: {conf:.0%} ({conf_label})</div>
+                <div style='font-size:0.75rem; color:#a1a1aa; line-height:1.5;'>{declaration.get('short_summary', '')}</div>
+                <div style='margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.06);'>
+                    <span style='font-size:0.65rem; color:#71717a;'>Recommendation:</span>
+                    <p style='font-size:0.75rem; color:#4ade80; margin:4px 0 0 0;'>{declaration.get('recommendation', '')}</p>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+
+def declaration_card(declaration):
+    """Render a standalone declaration card."""
+    if not declaration:
+        return
+
+    conf = declaration.get('confidence', 0)
+    if conf >= 0.90:
+        conf_color, conf_label = "#22c55e", "Very High"
+    elif conf >= 0.75:
+        conf_color, conf_label = "#84cc16", "High"
+    elif conf >= 0.60:
+        conf_color, conf_label = "#eab308", "Medium"
+    elif conf >= 0.45:
+        conf_color, conf_label = "#f97316", "Low"
+    else:
+        conf_color, conf_label = "#ef4444", "Very Low"
+
+    review_text = "REVIEW REQUIRED" if declaration.get('review_required', False) else ""
+    review_style = "position:absolute; top:12px; right:12px; background:#dc2626; color:white; font-size:0.7rem; padding:4px 12px; border-radius:12px; font-weight:600;" if review_text else "display:none;"
+
+    # Build factors list as plain text
+    factors_lines = []
+    factors = declaration.get('factors', {})
+    if factors:
+        for key, val in list(factors.items())[:5]:
+            if val is not None and val != "" and val != False:
+                key_display = key.replace('_', ' ').title()
+                factors_lines.append(f"{key_display}: {val}")
+
+    factors_display = " | ".join(factors_lines) if factors_lines else "No additional factors"
+
+    st.markdown(f"""
+    <div style='position:relative; background:#0a0a0f; border:1px solid rgba(99,102,241,0.3); border-radius:16px; padding:20px; margin:16px 0;'>
+        <div style='{review_style}'>{review_text}</div>
+        <div style='display:flex; align-items:center; gap:12px; margin-bottom:16px;'>
+            <div style='background:linear-gradient(135deg, #6366f1, #8b5cf6); padding:8px 16px; border-radius:8px;'>
+                <span style='font-size:0.8rem; font-weight:700; color:white;'>VAR</span>
+            </div>
+            <span style='font-size:0.75rem; color:#71717a; text-transform:uppercase; letter-spacing:0.1em;'>Official Declaration</span>
+        </div>
+        <h3 style='font-size:1.25rem; font-weight:700; color:#fafafa; margin:0 0 12px 0;'>{declaration.get('decision', 'Decision Pending')}</h3>
+        <div style='margin-bottom:16px;'>
+            <div style='font-size:0.7rem; color:#71717a; margin-bottom:4px;'>Confidence Level</div>
+            <div style='display:flex; align-items:center; gap:8px;'>
+                <div style='flex:1; height:8px; background:rgba(255,255,255,0.1); border-radius:4px;'>
+                    <div style='width:{conf*100}%; height:100%; background:{conf_color}; border-radius:4px;'></div>
+                </div>
+                <span style='font-size:0.85rem; font-weight:600; color:{conf_color};'>{conf:.0%}</span>
+            </div>
+            <div style='font-size:0.75rem; color:{conf_color}; margin-top:4px;'>{conf_label} Confidence</div>
+        </div>
+        <div style='background:rgba(255,255,255,0.03); border-radius:8px; padding:12px; margin-bottom:12px;'>
+            <div style='font-size:0.7rem; color:#71717a; margin-bottom:6px;'>Summary</div>
+            <p style='font-size:0.9rem; color:#e4e4e7; margin:0; line-height:1.5;'>{declaration.get('short_summary', '')}</p>
+        </div>
+        <div style='background:rgba(255,255,255,0.03); border-radius:8px; padding:12px; margin-bottom:12px;'>
+            <div style='font-size:0.7rem; color:#71717a; margin-bottom:6px;'>Analysis Factors</div>
+            <p style='font-size:0.8rem; color:#a1a1aa; margin:0;'>{factors_display}</p>
+        </div>
+        <div style='background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.2); border-radius:8px; padding:12px;'>
+            <div style='font-size:0.7rem; color:#4ade80; margin-bottom:4px; font-weight:600;'>RECOMMENDATION</div>
+            <p style='font-size:0.85rem; color:#4ade80; margin:0;'>{declaration.get('recommendation', '')}</p>
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -381,6 +615,9 @@ def main():
     if 'video_info' not in st.session_state:
         st.session_state.video_info = None
 
+    # Render pass network background
+    pass_network_background()
+
     # ===== HERO =====
     spacer(5)
     badge_animated(f"Introducing {BRAND_PRODUCT} {BRAND_VERSION}")
@@ -417,7 +654,7 @@ def main():
         ("03", "Team Classification", "Automatic team assignment using advanced jersey color clustering algorithms."),
         ("04", "Field Homography", "Precise coordinate mapping from camera perspective to real pitch positions."),
         ("05", "Offside Detection", "Millimeter-precise offside line calculation at the exact moment of pass."),
-        ("06", "Incident Analysis", "Real-time foul and penalty detection with player contact analysis."),
+        ("06", "VAR Declaration System", "Official decision announcements with confidence levels, rationale, and recommendations."),
     ]
     
     cols = st.columns(3)
@@ -435,7 +672,7 @@ def main():
     with cols[1]:
         stat_box("60", "FPS Processing")
     with cols[2]:
-        stat_box("7", "AI Modules")
+        stat_box("8", "AI Modules")
     with cols[3]:
         stat_box("<30ms", "Latency")
     st.markdown("</div>", unsafe_allow_html=True)
@@ -481,16 +718,32 @@ def main():
         if st.session_state.incidents:
             spacer(1)
             st.markdown("<div style='background:#0a0a0f; border:1px solid rgba(255,255,255,0.06); border-radius:16px; padding:1.5rem;'>", unsafe_allow_html=True)
-            card_header("Incident Timeline", f"{len(st.session_state.incidents)} Detected", "#818cf8")
+            card_header("VAR Decisions & Declarations", f"{len(st.session_state.incidents)} Detected", "#818cf8")
             for inc in st.session_state.incidents:
-                timeline_item(inc['type'], inc['timestamp'], inc['description'], inc['confidence'])
+                timeline_item(
+                    inc['type'],
+                    inc['timestamp'],
+                    inc['description'],
+                    inc['confidence'],
+                    declaration=inc.get('declaration')
+                )
+            st.markdown("</div>", unsafe_allow_html=True)
+
+            # Declaration details panel
+            spacer(1)
+            st.markdown("<div style='background:#0a0a0f; border:1px solid rgba(99,102,241,0.15); border-radius:16px; padding:1.5rem;'>", unsafe_allow_html=True)
+            card_header("Declaration Details", "Expanded View", "#6366f1")
+            for inc in st.session_state.incidents:
+                if inc.get('declaration'):
+                    declaration_card(inc['declaration'])
             st.markdown("</div>", unsafe_allow_html=True)
     
     with col2:
         st.markdown("<div style='background:#0a0a0f; border:1px solid rgba(255,255,255,0.06); border-radius:16px; padding:1.5rem;'>", unsafe_allow_html=True)
-        card_header("Analysis Modules", "7 Active", "#4ade80")
-        modules = ["Object Detection", "Multi-Object Tracking", "Team Classification", 
-                   "Field Homography", "Offside Detection", "Foul Detection", "Penalty Analysis"]
+        card_header("Analysis Modules", "8 Active", "#4ade80")
+        modules = ["Object Detection", "Multi-Object Tracking", "Team Classification",
+                   "Field Homography", "Offside Detection", "Foul Detection", "Penalty Analysis",
+                   "VAR Declaration System"]
         for i, mod in enumerate(modules):
             module_item_animated(mod, delay_ms=i*200)
         st.markdown("</div>", unsafe_allow_html=True)
@@ -510,9 +763,67 @@ def main():
                 frames = st.session_state.video_info['frames']
                 fps = st.session_state.video_info['fps']
                 st.session_state.incidents = [
-                    {'type': 'offside', 'timestamp': frames * 0.15 / fps, 'confidence': 0.91, 'description': 'Player beyond defensive line'},
-                    {'type': 'foul', 'timestamp': frames * 0.42 / fps, 'confidence': 0.78, 'description': 'Contact between players'},
-                    {'type': 'penalty', 'timestamp': frames * 0.71 / fps, 'confidence': 0.94, 'description': 'Foul in penalty area'},
+                    {
+                        'type': 'offside',
+                        'timestamp': frames * 0.15 / fps,
+                        'confidence': 0.91,
+                        'description': 'Player beyond defensive line',
+                        'declaration': {
+                            'decision': 'Offside - Attack Nullified',
+                            'confidence': 0.91,
+                            'confidence_level': 'Very High',
+                            'short_summary': 'Player 7 is 34.2cm beyond the offside line set by defender',
+                            'recommendation': 'Disallow the attack. Free kick to defending team.',
+                            'review_required': False,
+                            'factors': {
+                                'offside_margin_cm': 34.2,
+                                'tolerance_applied_cm': 15.0,
+                                'margin_category': 'moderate',
+                                'zone': 'attacking half'
+                            }
+                        }
+                    },
+                    {
+                        'type': 'foul',
+                        'timestamp': frames * 0.42 / fps,
+                        'confidence': 0.78,
+                        'description': 'Contact between players',
+                        'declaration': {
+                            'decision': 'Foul Confirmed',
+                            'confidence': 0.78,
+                            'confidence_level': 'High',
+                            'short_summary': 'Contact detected between Player 10 and Player 4',
+                            'recommendation': 'Award free kick to the fouled team.',
+                            'review_required': False,
+                            'factors': {
+                                'contact_detected': True,
+                                'fall_detected': True,
+                                'players_fell': [4],
+                                'foul_severity': 'medium'
+                            }
+                        }
+                    },
+                    {
+                        'type': 'penalty',
+                        'timestamp': frames * 0.71 / fps,
+                        'confidence': 0.94,
+                        'description': 'Foul in penalty area',
+                        'declaration': {
+                            'decision': 'Penalty Kick Awarded',
+                            'confidence': 0.94,
+                            'confidence_level': 'Very High',
+                            'short_summary': 'PENALTY: Contact in box - Players 3 & 9',
+                            'recommendation': 'Award penalty kick. Consider disciplinary action.',
+                            'review_required': False,
+                            'factors': {
+                                'contact_detected': True,
+                                'is_penalty_area': True,
+                                'fall_detected': True,
+                                'ball_distance_m': 1.2,
+                                'foul_severity': 'high'
+                            }
+                        }
+                    },
                 ]
                 st.session_state.results = {'processed_frames': frames}
                 st.rerun()
